@@ -13,3 +13,166 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Transporte {
+  id           String   @id @default(uuid())
+  placa        String
+  descricao    String
+  imagem       String
+  dataCadastro DateTime @default(now())
+  Viagem       Viagem[]
+}
+
+model LocalDeParada {
+  id           String   @id @default(uuid())
+  descricao    String
+  tipo         String
+  cidade       String
+  dataCadastro DateTime @default(now())
+  Grupo        Grupo[]
+}
+
+model Grupo {
+  id              String            @id @default(uuid())
+  nome            String
+  cidadeOrigem    String
+  cidadeDestino   String
+  dataCadastro    DateTime          @default(now())
+  status          Boolean
+  localDeParada   LocalDeParada     @relation(fields: [localDeParadaId], references: [id])
+  localDeParadaId String
+  Viagem          Viagem[]
+  ListaMotorista  ListaMotorista[]
+  ListaUsuario    ListaUsuario[]
+  ListaPassageiro ListaPassageiro[]
+}
+
+model Perfil {
+  id         String       @id @default(uuid())
+  descricao  String
+  status     Boolean
+  Motorista  Motorista[]
+  Usuario    Usuario[]
+  Passageiro Passageiro[]
+}
+
+model Motorista {
+  id                String           @id @default(uuid())
+  documento         String
+  nome              String
+  sobrenome         String
+  email             String
+  senha             String
+  telefone          String
+  status            Boolean
+  carteiraMotorista String
+  dataCadastro      DateTime         @default(now())
+  perfil            Perfil           @relation(fields: [perfilId], references: [id])
+  perfilId          String
+  Viagem            Viagem[]
+  ListaMotorista    ListaMotorista[]
+}
+
+model Usuario {
+  id            String          @id @default(uuid())
+  documento     String
+  nome          String
+  sobrenome     String
+  email         String
+  senha         String
+  telefone      String
+  status        Boolean
+  dataCadatro   DateTime        @default(now())
+  perfil        Perfil          @relation(fields: [perfilId], references: [id])
+  perfilId      String
+  ListaPresenca ListaPresenca[]
+  ListaUsuario  ListaUsuario[]
+}
+
+model Viagem {
+  id         String   @id @default(uuid())
+  dataInicio DateTime
+  dataFinal  DateTime
+  tipoViagem String
+  status     String
+
+  transporte    Transporte      @relation(fields: [transporteId], references: [id])
+  motorista     Motorista       @relation(fields: [motoristaId], references: [id])
+  grupo         Grupo           @relation(fields: [grupoId], references: [id])
+  transporteId  String
+  motoristaId   String
+  grupoId       String
+  ListaPresenca ListaPresenca[]
+}
+
+model ListaPresenca {
+  status    String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  viagem    Viagem  @relation(fields: [viagemId], references: [id])
+  usuarioId String
+  viagemId  String
+
+  @@id([usuarioId, viagemId])
+}
+
+model ListaMotorista {
+  motorista   Motorista @relation(fields: [motoristaId], references: [id])
+  grupo       Grupo     @relation(fields: [grupoId], references: [id])
+  motoristaId String
+  grupoId     String
+
+  @@id([grupoId, motoristaId])
+}
+
+model ListaUsuario {
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  grupo     Grupo   @relation(fields: [grupoId], references: [id])
+  usuarioId String
+  grupoId   String
+
+  @@id([usuarioId, grupoId])
+}
+
+model Endereco {
+  id            String          @id @default(uuid())
+  logradouro    String
+  numero        String
+  cidade        String
+  status        Boolean
+  dataCriacao   DateTime        @default(now())
+  bairro        String
+  ListaEndereco ListaEndereco[]
+}
+
+model Passageiro {
+  id              String            @id @default(uuid())
+  nome            String
+  status          Boolean
+  email           String
+  telefone        String
+  senha           String
+  documento       String
+  dataCriacao     DateTime          @default(now())
+  perfil          Perfil            @relation(fields: [perfilId], references: [id])
+  perfilId        String
+  ListaEndereco   ListaEndereco[]
+  ListaPassageiro ListaPassageiro[]
+}
+
+model ListaEndereco {
+  endereco     Endereco   @relation(fields: [enderecoId], references: [id])
+  passageiro   Passageiro @relation(fields: [passageiroId], references: [id])
+  enderecoId   String
+  passageiroId String
+
+  @@id([enderecoId, passageiroId])
+}
+
+model ListaPassageiro {
+  passageiro   Passageiro @relation(fields: [passageiroId], references: [id])
+  grupo        Grupo      @relation(fields: [grupoId], references: [id])
+  passageiroId String
+  grupoId      String
+
+  @@id([grupoId, passageiroId])
+}
