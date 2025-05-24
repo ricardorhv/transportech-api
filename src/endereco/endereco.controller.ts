@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -27,7 +28,7 @@ export class EnderecoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.enderecoService.findOne(+id);
+    return this.enderecoService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +36,12 @@ export class EnderecoController {
     @Param('id') id: string,
     @Body() updateEnderecoDto: UpdateEnderecoDto,
   ) {
-    return this.enderecoService.update(+id, updateEnderecoDto);
+    return this.enderecoService.update(id, updateEnderecoDto);
   }
 
+  @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.enderecoService.remove(+id);
+    return this.enderecoService.remove(id);
   }
 }

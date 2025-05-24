@@ -1,5 +1,5 @@
 - [x] Transporte: CRUD
-- [] Endereço: CRUD
+- [x] Endereço: CRUD
 - [] Grupo: CRUD
 - [] Usuario: CRU
 - [] Viagem: CRU

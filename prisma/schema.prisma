@@ -29,7 +29,8 @@ model LocalDeParada {
   tipo         TipoLocalDeParada
   cidade       String
   dataCadastro DateTime          @default(now())
-  Grupo        Grupo[]
+  grupo        Grupo             @relation(fields: [grupoId], references: [id])
+  grupoId      String
 }
 
 enum TipoLocalDeParada {
@@ -38,16 +39,15 @@ enum TipoLocalDeParada {
 }
 
 model Grupo {
-  id              String         @id @default(uuid())
-  nome            String
-  cidadeOrigem    String
-  cidadeDestino   String
-  dataCadastro    DateTime       @default(now())
-  status          Boolean
-  localDeParada   LocalDeParada  @relation(fields: [localDeParadaId], references: [id])
-  localDeParadaId String
-  Viagem          Viagem[]
-  ListaUsuario    ListaUsuario[]
+  id                 String          @id @default(uuid())
+  nome               String
+  cidadeOrigem       String
+  cidadeDestino      String
+  dataCadastro       DateTime        @default(now())
+  status             Boolean
+  Viagem             Viagem[]
+  ListaUsuario       ListaUsuario[]
+  ListaLocalDeParada LocalDeParada[]
 }
 
 model Perfil {
@@ -120,14 +120,14 @@ model ListaUsuario {
 }
 
 model Endereco {
-  id            String          @id @default(uuid())
-  logradouro    String
-  numero        String
-  cidade        String
-  status        Boolean
-  dataCriacao   DateTime        @default(now())
-  bairro        String
-  ListaEndereco ListaEndereco[]
+  id             String          @id @default(uuid())
+  logradouro     String
+  numero         String
+  cidade         String
+  enderecoPadrao Boolean
+  dataCriacao    DateTime        @default(now())
+  bairro         String
+  ListaEndereco  ListaEndereco[]
 }
 
 model ListaEndereco {
