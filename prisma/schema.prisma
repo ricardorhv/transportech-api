@@ -77,8 +77,8 @@ model Usuario {
 
 model Viagem {
   id            String          @id @default(uuid())
-  dataInicio    DateTime
-  dataFinal     DateTime
+  dataInicio    DateTime        @default(now())
+  dataFinal     DateTime?
   tipoViagem    TipoViagem
   status        StatusViagem
   transporte    Transporte      @relation(fields: [transporteId], references: [id])
