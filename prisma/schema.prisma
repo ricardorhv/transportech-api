@@ -16,7 +16,7 @@ datasource db {
 
 model Transporte {
   id           String   @id @default(uuid())
-  placa        String
+  placa        String   @unique
   descricao    String
   imagem       String
   dataCadastro DateTime @default(now())
