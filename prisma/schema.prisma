@@ -24,85 +24,80 @@ model Transporte {
 }
 
 model LocalDeParada {
-  id           String   @id @default(uuid())
+  id           String            @id @default(uuid())
   descricao    String
-  tipo         String
+  tipo         TipoLocalDeParada
   cidade       String
-  dataCadastro DateTime @default(now())
+  dataCadastro DateTime          @default(now())
   Grupo        Grupo[]
 }
 
+enum TipoLocalDeParada {
+  ORIGEM
+  DESTINO
+}
+
 model Grupo {
-  id              String            @id @default(uuid())
+  id              String         @id @default(uuid())
   nome            String
   cidadeOrigem    String
   cidadeDestino   String
-  dataCadastro    DateTime          @default(now())
+  dataCadastro    DateTime       @default(now())
   status          Boolean
-  localDeParada   LocalDeParada     @relation(fields: [localDeParadaId], references: [id])
+  localDeParada   LocalDeParada  @relation(fields: [localDeParadaId], references: [id])
   localDeParadaId String
   Viagem          Viagem[]
-  ListaMotorista  ListaMotorista[]
   ListaUsuario    ListaUsuario[]
-  ListaPassageiro ListaPassageiro[]
 }
 
 model Perfil {
-  id         String       @id @default(uuid())
-  descricao  String
-  status     Boolean
-  Motorista  Motorista[]
-  Usuario    Usuario[]
-  Passageiro Passageiro[]
-}
-
-model Motorista {
-  id                String           @id @default(uuid())
-  documento         String
-  nome              String
-  sobrenome         String
-  email             String
-  senha             String
-  telefone          String
-  status            Boolean
-  carteiraMotorista String
-  dataCadastro      DateTime         @default(now())
-  perfil            Perfil           @relation(fields: [perfilId], references: [id])
-  perfilId          String
-  Viagem            Viagem[]
-  ListaMotorista    ListaMotorista[]
+  id        String    @id @default(uuid())
+  descricao String
+  status    Boolean
+  Usuario   Usuario[]
 }
 
 model Usuario {
-  id            String          @id @default(uuid())
-  documento     String
-  nome          String
-  sobrenome     String
-  email         String
-  senha         String
-  telefone      String
-  status        Boolean
-  dataCadatro   DateTime        @default(now())
-  perfil        Perfil          @relation(fields: [perfilId], references: [id])
-  perfilId      String
-  ListaPresenca ListaPresenca[]
-  ListaUsuario  ListaUsuario[]
+  id                  String          @id @default(uuid())
+  documento           String
+  nome                String
+  sobrenome           String
+  email               String
+  senha               String
+  telefone            String
+  status              Boolean
+  dataCadatro         DateTime        @default(now())
+  perfil              Perfil          @relation(fields: [perfilId], references: [id])
+  perfilId            String
+  carteiraDeMotorista String?
+  ListaPresenca       ListaPresenca[]
+  ListaUsuario        ListaUsuario[]
+  ListaEndereco       ListaEndereco[]
 }
 
 model Viagem {
-  id         String   @id @default(uuid())
-  dataInicio DateTime
-  dataFinal  DateTime
-  tipoViagem String
-  status     String
-
+  id            String          @id @default(uuid())
+  dataInicio    DateTime
+  dataFinal     DateTime
+  tipoViagem    TipoViagem
+  status        StatusViagem
   transporte    Transporte      @relation(fields: [transporteId], references: [id])
-  motorista     Motorista       @relation(fields: [motoristaId], references: [id])
   grupo         Grupo           @relation(fields: [grupoId], references: [id])
   transporteId  String
   motoristaId   String
   grupoId       String
   ListaPresenca ListaPresenca[]
+}
+
+enum StatusViagem {
+  AGUARDANDO_INICIO
+  EM_ANDAMENTO
+  CONCLUIDA
+}
+
+enum TipoViagem {
+  IDA
+  VOLTA
 }
 
 model ListaPresenca {
@@ -113,15 +108,6 @@ model ListaPresenca {
   viagemId  String
 
   @@id([usuarioId, viagemId])
-}
-
-model ListaMotorista {
-  motorista   Motorista @relation(fields: [motoristaId], references: [id])
-  grupo       Grupo     @relation(fields: [grupoId], references: [id])
-  motoristaId String
-  grupoId     String
-
-  @@id([grupoId, motoristaId])
 }
 
 model ListaUsuario {
@@ -144,35 +130,12 @@ model Endereco {
   ListaEndereco ListaEndereco[]
 }
 
-model Passageiro {
-  id              String            @id @default(uuid())
-  nome            String
-  status          Boolean
-  email           String
-  telefone        String
-  senha           String
-  documento       String
-  dataCriacao     DateTime          @default(now())
-  perfil          Perfil            @relation(fields: [perfilId], references: [id])
-  perfilId        String
-  ListaEndereco   ListaEndereco[]
-  ListaPassageiro ListaPassageiro[]
-}
-
 model ListaEndereco {
-  endereco     Endereco   @relation(fields: [enderecoId], references: [id])
-  passageiro   Passageiro @relation(fields: [passageiroId], references: [id])
-  enderecoId   String
-  passageiroId String
+  endereco   Endereco @relation(fields: [enderecoId], references: [id])
+  enderecoId String
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
-  @@id([enderecoId, passageiroId])
-}
+  usuarioId String
 
-model ListaPassageiro {
-  passageiro   Passageiro @relation(fields: [passageiroId], references: [id])
-  grupo        Grupo      @relation(fields: [grupoId], references: [id])
-  passageiroId String
-  grupoId      String
-
-  @@id([grupoId, passageiroId])
+  @@id([enderecoId, usuarioId])
 }

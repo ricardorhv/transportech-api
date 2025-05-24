@@ -1,3 +1,12 @@
+-- CreateEnum
+CREATE TYPE "TipoLocalDeParada" AS ENUM ('ORIGEM', 'DESTINO');
+
+-- CreateEnum
+CREATE TYPE "StatusViagem" AS ENUM ('AGUARDANDO_INICIO', 'EM_ANDAMENTO', 'CONCLUIDA');
+
+-- CreateEnum
+CREATE TYPE "TipoViagem" AS ENUM ('IDA', 'VOLTA');
+
 -- CreateTable
 CREATE TABLE "Transporte" (
     "id" TEXT NOT NULL,
@@ -13,7 +22,7 @@ CREATE TABLE "Transporte" (
 CREATE TABLE "LocalDeParada" (
     "id" TEXT NOT NULL,
     "descricao" TEXT NOT NULL,
-    "tipo" TEXT NOT NULL,
+    "tipo" "TipoLocalDeParada" NOT NULL,
     "cidade" TEXT NOT NULL,
     "dataCadastro" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -80,8 +89,8 @@ CREATE TABLE "Viagem" (
     "id" TEXT NOT NULL,
     "dataInicio" TIMESTAMP(3) NOT NULL,
     "dataFinal" TIMESTAMP(3) NOT NULL,
-    "tipoViagem" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "tipoViagem" "TipoViagem" NOT NULL,
+    "status" "StatusViagem" NOT NULL,
     "transporteId" TEXT NOT NULL,
     "motoristaId" TEXT NOT NULL,
     "grupoId" TEXT NOT NULL,
@@ -128,34 +137,11 @@ CREATE TABLE "Endereco" (
 );
 
 -- CreateTable
-CREATE TABLE "Passageiro" (
-    "id" TEXT NOT NULL,
-    "nome" TEXT NOT NULL,
-    "status" BOOLEAN NOT NULL,
-    "email" TEXT NOT NULL,
-    "telefone" TEXT NOT NULL,
-    "senha" TEXT NOT NULL,
-    "documento" TEXT NOT NULL,
-    "dataCriacao" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "perfilId" TEXT NOT NULL,
-
-    CONSTRAINT "Passageiro_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "ListaEndereco" (
     "enderecoId" TEXT NOT NULL,
-    "passageiroId" TEXT NOT NULL,
+    "usuarioId" TEXT NOT NULL,
 
-    CONSTRAINT "ListaEndereco_pkey" PRIMARY KEY ("enderecoId","passageiroId")
-);
-
--- CreateTable
-CREATE TABLE "ListaPassageiro" (
-    "passageiroId" TEXT NOT NULL,
-    "grupoId" TEXT NOT NULL,
-
-    CONSTRAINT "ListaPassageiro_pkey" PRIMARY KEY ("grupoId","passageiroId")
+    CONSTRAINT "ListaEndereco_pkey" PRIMARY KEY ("enderecoId","usuarioId")
 );
 
 -- AddForeignKey
@@ -195,16 +181,7 @@ ALTER TABLE "ListaUsuario" ADD CONSTRAINT "ListaUsuario_usuarioId_fkey" FOREIGN 
 ALTER TABLE "ListaUsuario" ADD CONSTRAINT "ListaUsuario_grupoId_fkey" FOREIGN KEY ("grupoId") REFERENCES "Grupo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Passageiro" ADD CONSTRAINT "Passageiro_perfilId_fkey" FOREIGN KEY ("perfilId") REFERENCES "Perfil"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "ListaEndereco" ADD CONSTRAINT "ListaEndereco_enderecoId_fkey" FOREIGN KEY ("enderecoId") REFERENCES "Endereco"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ListaEndereco" ADD CONSTRAINT "ListaEndereco_passageiroId_fkey" FOREIGN KEY ("passageiroId") REFERENCES "Passageiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ListaPassageiro" ADD CONSTRAINT "ListaPassageiro_passageiroId_fkey" FOREIGN KEY ("passageiroId") REFERENCES "Passageiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ListaPassageiro" ADD CONSTRAINT "ListaPassageiro_grupoId_fkey" FOREIGN KEY ("grupoId") REFERENCES "Grupo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ListaEndereco" ADD CONSTRAINT "ListaEndereco_usuarioId_fkey" FOREIGN KEY ("usuarioId") REFERENCES "Usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
