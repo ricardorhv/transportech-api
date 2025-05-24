@@ -63,9 +63,9 @@ model Usuario {
   nome                String
   sobrenome           String
   email               String
-  senha               String
+  senha               String          
   telefone            String
-  status              Boolean
+  status              Boolean?        @default(true)
   dataCadatro         DateTime        @default(now())
   perfil              Perfil          @relation(fields: [perfilId], references: [id])
   perfilId            String
