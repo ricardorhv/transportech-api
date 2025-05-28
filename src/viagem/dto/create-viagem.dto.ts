@@ -1,6 +1,8 @@
+import { StatusViagem, TipoViagem } from 'generated/prisma';
+
 export class CreateViagemDto {
-  tipoViagem: string;
-  status: string;
+  tipoViagem: TipoViagem;
+  status: StatusViagem;
   transporteId: string;
   motoristaId: string;
   grupoId: string;

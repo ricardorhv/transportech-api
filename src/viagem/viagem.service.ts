@@ -12,8 +12,6 @@ export class ViagemService {
     const viagem = await this.prisma.viagem.create({
       data: {
         ...createViagemDto,
-        tipoViagem: createViagemDto.tipoViagem as TipoViagem,
-        status: createViagemDto.status as StatusViagem,
       },
     });
     return viagem;

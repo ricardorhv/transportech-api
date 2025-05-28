@@ -1,27 +1,22 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TransporteModule } from './transporte/transporte.module';
-import { PrismaModule } from './prisma/prisma.module';
 import { EnderecoModule } from './endereco/endereco.module';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { GrupoModule } from './grupo/grupo.module';
-
-@Module({
-  imports: [TransporteModule, PrismaModule, EnderecoModule, GrupoModule],
-=======
+import { PrismaModule } from './prisma/prisma.module';
+import { TransporteModule } from './transporte/transporte.module';
 import { UsuarioModule } from './usuario/usuario.module';
-
-@Module({
-  imports: [TransporteModule, PrismaModule, EnderecoModule, UsuarioModule],
->>>>>>> 332d7e7466d9ae7d6713a5b8dd3eb4e465117578
-=======
 import { ViagemModule } from './viagem/viagem.module';
 
 @Module({
-  imports: [TransporteModule, PrismaModule, EnderecoModule, ViagemModule],
->>>>>>> steffany
+  imports: [
+    TransporteModule,
+    PrismaModule,
+    EnderecoModule,
+    ViagemModule,
+    GrupoModule,
+    UsuarioModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

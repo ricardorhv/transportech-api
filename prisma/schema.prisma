@@ -63,7 +63,7 @@ model Usuario {
   nome                String
   sobrenome           String
   email               String
-  senha               String          
+  senha               String
   telefone            String
   status              Boolean?        @default(true)
   dataCadatro         DateTime        @default(now())
@@ -92,6 +92,7 @@ model Viagem {
 enum StatusViagem {
   AGUARDANDO_INICIO
   EM_ANDAMENTO
+  CANCELADA
   CONCLUIDA
 }
 
