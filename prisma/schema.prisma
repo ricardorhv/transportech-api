@@ -45,7 +45,7 @@ model Grupo {
   cidadeOrigem  String
   cidadeDestino String
   dataCadastro  DateTime @default(now())
-  status        Boolean
+  status        Boolean  @default(true)
 
   Viagem             Viagem[]
   ListaLocalDeParada LocalDeParada[]
