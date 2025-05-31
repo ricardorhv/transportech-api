@@ -3,4 +3,5 @@ export class CreateGrupoDto {
   cidadeOrigem: string;
   cidadeDestino: string;
   status: boolean;
+  descricao: string;
 }

@@ -39,22 +39,25 @@ enum TipoLocalDeParada {
 }
 
 model Grupo {
-  id                 String          @id @default(uuid())
-  nome               String
-  cidadeOrigem       String
-  cidadeDestino      String
-  dataCadastro       DateTime        @default(now())
-  status             Boolean
+  id            String   @id @default(uuid())
+  nome          String
+  descricao     String
+  cidadeOrigem  String
+  cidadeDestino String
+  dataCadastro  DateTime @default(now())
+  status        Boolean
+
   Viagem             Viagem[]
-  ListaUsuario       ListaUsuario[]
   ListaLocalDeParada LocalDeParada[]
+  usuarios           Usuario[]
 }
 
 model Perfil {
-  id        String    @id @default(uuid())
+  id        String  @id @default(uuid())
   descricao String
   status    Boolean
-  Usuario   Usuario[]
+
+  Usuario Usuario[]
 }
 
 model Usuario {
@@ -62,7 +65,7 @@ model Usuario {
   documento           String
   nome                String
   sobrenome           String
-  email               String
+  email               String          @unique
   senha               String
   telefone            String
   status              Boolean?        @default(true)
@@ -71,8 +74,8 @@ model Usuario {
   perfilId            String
   carteiraDeMotorista String?
   ListaPresenca       ListaPresenca[]
-  ListaUsuario        ListaUsuario[]
-  ListaEndereco       ListaEndereco[]
+  grupos              Grupo[]
+  enderecos           Endereco[]
 }
 
 model Viagem {
@@ -111,32 +114,14 @@ model ListaPresenca {
   @@id([usuarioId, viagemId])
 }
 
-model ListaUsuario {
-  usuario   Usuario @relation(fields: [usuarioId], references: [id])
-  grupo     Grupo   @relation(fields: [grupoId], references: [id])
-  usuarioId String
-  grupoId   String
-
-  @@id([usuarioId, grupoId])
-}
-
 model Endereco {
-  id             String          @id @default(uuid())
+  id             String   @id @default(uuid())
   logradouro     String
   numero         String
   cidade         String
   enderecoPadrao Boolean
-  dataCriacao    DateTime        @default(now())
+  dataCriacao    DateTime @default(now())
   bairro         String
-  ListaEndereco  ListaEndereco[]
-}
 
-model ListaEndereco {
-  endereco   Endereco @relation(fields: [enderecoId], references: [id])
-  enderecoId String
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
-
-  usuarioId String
-
-  @@id([enderecoId, usuarioId])
+  usuarios Usuario[]
 }
